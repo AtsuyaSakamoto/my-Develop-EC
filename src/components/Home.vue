@@ -1,7 +1,5 @@
 <template>
 <div class="main">
-<!-- <Swiper/> -->
- <!-- <p class="kensaku"><Search v-model="value"/> -->
  <p class="kensaku">
    <input type="text" v-model="value" placeholder="search menu">
  <!-- <Button text="検索"/> -->

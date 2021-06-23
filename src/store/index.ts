@@ -49,9 +49,8 @@ export default new Vuex.Store({
       state.rireki.push(state.cart)
       console.log(state.cart)
       state.cart=""
-      console.log("履歴")
-      console.log(state.cart)
-      console.log(state.rireki)
+      // console.log(state.cart)
+      // console.log(state.rireki)
     }
       
     
@@ -90,10 +89,7 @@ export default new Vuex.Store({
           .then((doc) => {
             item.orderId=doc.id
             commit("newCart",{item});
-            console.log("にゅーカート")
-            // console.log(item.orderId)
-            // console.log(this.state.cart)
-            // console.log(getters.orderId.orderId)
+            // console.log("にゅーカート")
           });
       }
     },
@@ -108,10 +104,8 @@ export default new Vuex.Store({
               .then(() => {
                 data.orderId=getters.orderId
                 commit("addCart",{data});
-                console.log("あどカート")
-                console.log(this.state.cart)
-                // console.log(getters.orderId.orderId)
-                // console.log(data)
+                // console.log("あどカート")
+                // console.log(this.state.cart)
               });
           }
         },
@@ -120,7 +114,6 @@ export default new Vuex.Store({
              firebase
               .firestore()
               .collection(`users/${getters.uid}/orders`)
-              // .doc(getters.orderId)
               .get()
               .then(snapshot=>{
                 const cart=[]
@@ -131,23 +124,9 @@ export default new Vuex.Store({
                     commit("cartSet",{orederId:doc.id,cart:cart})
                   }
                 })
-                // const cart=[]
-                // if(doc.data().status===0){
-                //   cart.push(doc.data())
-                // }
-                // cart[0].orderId=getters.orderId
-                console.log("せっとかーと")
-                console.log(this.state.cart)
-                // console.log(cart)
-
-                // commit("addCart",cart);
+                // console.log("せっとかーと")
+                // console.log(this.state.cart)
               })
-              // .then(snapshot=>{
-              //   snapshot.forEach(doc=>(
-              //     commit("cartSet",{cart:doc.data()}))),
-              //     console.log("発火")
-              //     console.log(this.state.cart)
-              // })
           }
         },
         deleteCart({ getters, commit },{id}) {
@@ -174,12 +153,6 @@ export default new Vuex.Store({
     uid: (state) => (state.login_user ? state.login_user.uid : null),
     orderId:(state)=>(state.orderId ? state.orderId: ""),
     cartItem:(state)=>(state.cart ? state.cart: ""),
-    // getOrdersById:(state)=>(id)=>
-    // state.cart.find((item)=>item.id===id),
-    // getItemById: (state) => (id: number) => state.items.find((item) => item.id === id),
-    // getItemById: (state) => {
-    //   return state.items.filter(item=>item.id)
-    // }
-   userName: (state) => (state.login_user ? state.login_user.displayName : ""),
+    userName: (state) => (state.login_user ? state.login_user.displayName : ""),
   }
 })

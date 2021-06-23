@@ -61,9 +61,6 @@ export default class Cart extends Vue{
     this.order=!this.order 
   }
   user=this.$store.state.login_user
-  // created():void{
-  //   this.$store.dispatch("cartSet")
-  //  }
   // get carts():CartItems{
   //  return this.$store.state.cart
   // }

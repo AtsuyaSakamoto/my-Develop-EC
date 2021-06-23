@@ -24,7 +24,6 @@
         <button @click="$router.push({name:'Cart'},()=>{})"><v-icon>mdi-cart</v-icon><br>カート</button>｜
         <button @click="$router.push({name:'Rireki'},()=>{})"><v-icon>mdi-file</v-icon><br>購入履歴</button>｜
        
-        <!-- <span v-show="$store.state.login_user">{{ userName }}</span> -->
       </div>
       <div class="name">
         <button v-show="!$store.state.login_user" @click="login">ログイン</button> 
@@ -38,7 +37,6 @@
 
     <v-main>
       <router-view/>
-      <!-- <ItemDes /> -->
     </v-main>
   </v-app>
 </template>
@@ -60,16 +58,9 @@ import firebase from "firebase"
  created(){
       firebase.auth().onAuthStateChanged(user=>{
         if(user){
-          // mapActions(["setLoginUser(user)"])
-          this.setLoginUser(user)
-          // this.fetchCart();          
-          // if(this.$router.currentRoute.name ==="Home"){
-            // this.$router.push({name:"Home"});
-          // }
+         this.setLoginUser(user)
         }else{
-          // mapActions(["deleteLoginUser()"])
           this.deleteLoginUser()
-          // this.$router.push({name:"Home"});
         }
       })
       

@@ -75,7 +75,7 @@ export default class ItemDes extends Vue {
     if(confirm('カートに商品を追加しますか?')){
 if(cart ===""){
       this.$store.dispatch("newCart",{user:this.user, item:item})
-      // handleLink('/cart-item')
+      
     }else{
       const copyCart = cart
       let info = [...copyCart.itemInfo, item.itemInfo[0]]
@@ -85,7 +85,7 @@ if(cart ===""){
         itemInfo:info
       }
       this.$store.dispatch("addCart",{user:this.user,data:data})
-      // handleLink('/cart-item')
+     
     }
     }
     

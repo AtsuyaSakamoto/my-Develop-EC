@@ -10,7 +10,6 @@
 <ul class="list">
     <li v-for="(item) in (allCart)" :key="item.id">
     <!-- <li v-for="(it) in (item)" :key="it.id"> -->
-    <!-- <li  v-for="(it) in (item.itemInfo)" :key="it.id"> -->
       <v-card class="card" max-width="250px" max-height="300px">
       <p><img height="120px" width="250px" :src="item.itemInfo[0].itemImage"></p>
       <v-spacer></v-spacer>
