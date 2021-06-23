@@ -1,32 +1,85 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+
+      <div class="d-flex align-center">
+        <v-img
+          alt="header_logo.png"
+          class="shrink mr-2"
+          contain
+          src="./assets/images/header.png"
+          transition="scale-transition"
+          width="150"
+          @click="$router.push({name:'Home'},()=>{})"
+        />
+      </div>
+
+      <div id="menu" >
+        <!-- <button @click="this.$router.push('/cart')>押して</button> -->
+        <button @click="$router.push({name:'Home'},()=>{})"><v-icon>mdi-menu</v-icon><br>商品一覧</button>｜
+        <button @click="$router.push({name:'Cart'},()=>{})"><v-icon>mdi-cart</v-icon><br>カート</button>｜
+        <button @click="$router.push({name:'Rireki'},()=>{})"><v-icon>mdi-file</v-icon><br>購入履歴</button>｜
+       
+        <!-- <span v-show="$store.state.login_user">{{ userName }}</span> -->
+      </div>
+      <div class="name">
+        <button v-show="!$store.state.login_user" @click="login">ログイン</button> 
+        <button v-show="$store.state.login_user" @click="logout">ログアウト</button> ｜
+        <span v-show="$store.state.login_user">ユーザー名：{{userName}}</span>
+      </div>
+
+      <v-spacer></v-spacer>
+      
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+      <!-- <ItemDes /> -->
+    </v-main>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import Home from "@/components/Home.vue";
+import {mapActions,mapGetters} from "vuex"
+import firebase from "firebase"
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+@Component({
+  components:{
+    Home,
+  },
+  methods:{
+    ...mapActions(["login","setLoginUser","logout","deleteLoginUser"])
+  },  
+ created(){
+      firebase.auth().onAuthStateChanged(user=>{
+        if(user){
+          // mapActions(["setLoginUser(user)"])
+          this.setLoginUser(user)
+          // this.fetchCart();          
+          // if(this.$router.currentRoute.name ==="Home"){
+            // this.$router.push({name:"Home"});
+          // }
+        }else{
+          // mapActions(["deleteLoginUser()"])
+          this.deleteLoginUser()
+          // this.$router.push({name:"Home"});
+        }
+      })
+      
+    },
+    computed:{
+    ...mapGetters(["userName"])
   }
+})
+export default class App extends Vue{
+
 }
-</style>
+</script>
+
