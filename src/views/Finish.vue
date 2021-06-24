@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="finish">
   <h2>注文内容が送信されました</h2>
   <p>この度はご注文ありがとうございます</p>
   <!-- <p>※5秒後に自動でトップページに戻ります</p> -->
@@ -15,3 +15,10 @@ import {Component} from 'vue-property-decorator';
 export default class OrderFinish extends Vue{
 }
 </script>
+
+<style scoped>
+.finish{
+  text-align: center;
+  margin-top: 30px;
+}
+</style>

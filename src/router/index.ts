@@ -5,6 +5,7 @@ import ItemDes from '../views/ItemDes.vue'
 import Cart from '../views/Cart.vue'
 import Finish from '../views/Finish.vue'
 import Rireki from '../views/Rireki.vue'
+import Login from '../views/Login.vue'
 
 
 
@@ -35,6 +36,11 @@ const routes: Array<RouteConfig> = [
     path: '/rireki',
     name: 'Rireki',
     component:Rireki,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component:Login,
   },
 ]
 

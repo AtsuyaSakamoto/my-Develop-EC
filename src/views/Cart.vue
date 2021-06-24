@@ -1,5 +1,6 @@
 <template>
-<div class="form">
+<div>
+<div v-if="goOrder" class="form">
   <div>
   <h2>注文内容確認</h2>
   <br>
@@ -7,7 +8,7 @@
     <v-layout row rap justify-center>
     <v-row justify="center" >
 <ul class="list">
-    <li  v-for="(item) in (carts.itemInfo)" :key="item.id">
+    <li  v-for="(item,index) in (carts.itemInfo)" :key="index">
       <v-card class="card" max-width="250px" max-height="300px">
       <p><img height="120px" width="250px" :src="item.itemImage"></p>
       <v-spacer></v-spacer>
@@ -15,23 +16,29 @@
       <p>{{item.itemName}}</p> 
       <p>{{item.buyNum}}個</p> 
       <p>{{item.itemPrice*item.buyNum}}円</p> 
-      {{carts.orderId}}
+      <!-- {{index}} -->
+      <!-- {{carts.orderId}} -->
+      <p><v-btn color="error" small  @click="deleteCart(index)">商品を削除<v-icon>mdi-delete</v-icon></v-btn></p>
       </v-card-text>
       </v-card>
     </li>
   </ul>
   </v-row>
   </v-layout>
-  <!-- <h3 v-show="totalPrice()">消費税： {{Math.round(totalPrice()*0.1)}} 円</h3>
-  <h3 v-show="totalPrice()">合計金額： {{Math.round(totalPrice()*1.1)}} 円(税込)</h3> -->
+  <br>
+  <br>
+  <h3 v-show="totalPrice()">消費税： {{Math.round(totalZei()).toLocaleString()}} 円</h3> 
+  <h3 v-show="totalPrice">合計金額： {{Math.round(totalPrice()).toLocaleString()}} 円(税込)</h3>
 
 <br>
 <br>
-<p><v-btn color="error" small  @click="deleteCart(carts.orderId)">カートを削除<v-icon>mdi-delete</v-icon></v-btn></p>
 
-<!-- <p>カート{{carts}}</p> -->
-<v-btn color="primary" @click="goOrder">注文に進む</v-btn>
+<v-btn color="primary" @click="go">注文に進む</v-btn>
   <div v-show="order"><Order/></div>
+  </div>
+  </div>
+  <div v-else class="form">
+    <h2>カートが空です</h2>
   </div>
   </div>
 </template>
@@ -54,33 +61,55 @@ import {CartItems} from '@/types/index'
  
 })
 export default class Cart extends Vue{
-  total=0
   order=false
-  carts=this.$store.state.cart
-  goOrder():void{
-    this.order=!this.order 
+  // carts=this.$store.state.cart
+  go():void{
+    this.order=!this.order
   }
-  user=this.$store.state.login_user
-  // get carts():CartItems{
-  //  return this.$store.state.cart
-  // }
+  get goOrder():boolean{
+    if(this.$store.state.cart===null||this.$store.state.cart.itemInfo.length===0){
+     return false
+    }else{
+      return true
+    }
+  }
   
-  deleteCart(id):void{
+  user=this.$store.state.login_user
+  get carts():CartItems{
+   return this.$store.state.cart
+  }
+  
+  deleteCart(index):void{
     if(confirm("カートを削除してよろしいですか?")){
 
       console.log("でりーとかーと")
-    this.$store.dispatch("deleteCart",{id})
+      let copy=this.$store.state.cart
+      copy.itemInfo.splice(index,1)
+      console.log(copy)
+    this.$store.dispatch("deleteCart",copy)
+    // console.log(copy)
     }
   }
-  // totalPrice():number{
-  //   if(this.carts!==""){
-  //   this.total=0
-  //   this.carts.itemInfo.forEach(item=>{
-  //   this.total=(this.total+item.itemPrice*item.buyNum)
-  //   })
-  //     return this.total
-  //     }
-  // }
+  totalPrice():number{
+    let total=0
+    if(this.carts!==null){
+      this.carts.itemInfo.forEach(item=>{
+        total+=total+item.itemPrice*item.buyNum
+        })
+        total=total*1.1
+        return total
+        }
+        }
+  totalZei():number{
+    let total=0
+    if(this.carts!==null){
+      this.carts.itemInfo.forEach(item=>{
+        total+=total+item.itemPrice*item.buyNum
+        })
+        total=total*0.1
+        return total
+        }
+        }
 
 }
 </script>

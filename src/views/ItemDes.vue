@@ -13,19 +13,9 @@
 <p id="red">数量を選択してください</p>
 <span>数量：
 </span>
-<select v-model="value">
-<option value="1">   1   </option>
-<option value="2">   2   </option>
-<option value="3">   3   </option>
-<option value="4">   4   </option>
-<option value="5">   5   </option>
-<option value="6">   6   </option>
-<option value="7">   7   </option>
-<option value="8">   8   </option>
-<option value="9">   9   </option>
-<option value="10">   10   </option>
-</select><br>
-<h2>小計：{{item.price*value}}円（税抜）</h2>
+<v-select :items="selectNumber" v-model="value" class="select">
+</v-select><br>
+<h2>小計：{{(item.price*value).toLocaleString()}}円（税抜）</h2>
 <v-btn color="primary" type="submit" @click="addCart">カートに入れる</v-btn>
 </li>
   </ul>
@@ -47,7 +37,10 @@ import {ItemData} from '@/types/index'
     Button
   },
  })
+
 export default class ItemDes extends Vue {
+  selectNumber = [1,2,3,4,5,6,7,8,9,10]
+  
   value=1
   user=this.$store.state.login_user
 
@@ -73,7 +66,10 @@ export default class ItemDes extends Vue {
       }]
     }
     if(confirm('カートに商品を追加しますか?')){
-if(cart ===""){
+      if(this.$store.getters.uid===null){
+        this.$router.push({name:'Login'})
+      }
+    if(cart ===null){
       this.$store.dispatch("newCart",{user:this.user, item:item})
       
     }else{
@@ -84,11 +80,9 @@ if(cart ===""){
         status:0,
         itemInfo:info
       }
-      this.$store.dispatch("addCart",{user:this.user,data:data})
-     
+      this.$store.dispatch("addCart",{user:this.user,data:data}) 
     }
-    }
-    
+    }    
   }
   }
   
@@ -99,5 +93,9 @@ if(cart ===""){
   margin-top: 30px;
   list-style: none;
   text-align: center;
+}
+.select{
+  width: 50px;
+  margin:auto;
 }
 </style>

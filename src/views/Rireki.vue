@@ -8,25 +8,26 @@
 <v-layout row rap justify-center>
     <v-row justify="center" >
 <ul class="list">
-    <li v-for="(item) in (allCart)" :key="item.id">
+    <div v-for="(item) in (rireki)" :key="item.id">
+    <li v-for="(innerItem) in (item.itemInfo)" :key="innerItem.id">
     <!-- <li v-for="(it) in (item)" :key="it.id"> -->
       <v-card class="card" max-width="250px" max-height="300px">
-      <p><img height="120px" width="250px" :src="item.itemInfo[0].itemImage"></p>
+      <p><img height="120px" width="250px" :src="innerItem.itemImage"></p>
       <v-spacer></v-spacer>
       <v-card-text> 
-      <p>{{item.itemInfo[0].itemName}}</p> 
-      <p>{{item.itemInfo[0].buyNum}}個</p> 
-      <p>{{item.itemInfo[0].itemPrice*item.itemInfo[0].buyNum}}円</p> 
+      <p>{{innerItem.itemName}}</p> 
+      <p>{{innerItem.buyNum}}個</p> 
+      <p>{{innerItem.itemPrice*innerItem.buyNum}}円</p> 
       </v-card-text>
       </v-card>
     </li>
+    </div>
   </ul>
   </v-row>
   </v-layout>
   <br>
   <br>
-<p>{{allCart[0]}}</p>
-
+<!-- {{rireki}} -->
 </div>
 
 </template>
@@ -34,32 +35,27 @@
 <script lang="ts">
 import Vue from 'vue'
 import {Component} from 'vue-property-decorator';
-import {CartItems} from '@/types/index'
+// import {CartItems} from '@/types/index'
 
-@Component
+@Component({
+  created(){
+    this.$store.dispatch("getRireki")
+    // console.log(this.$store.state.rireki)
+  },
+})
 export default class Rireki extends Vue{
-  carts=this.$store.state.cart
-  rirekiCart():CartItems[]{
-    console.log(this.carts)
-     const rireki=[]
-     this.carts.filter((cart:CartItems)=>{
-       if(cart.status !== 0){
-         rireki.push(cart)
-       }
-     })
-     console.log(rireki)
-     return rireki
+  get rireki():any{
+   return this.$store.state.rireki
   }
-  allCart=this.$store.state.rireki
 }
 </script>
 
 <style scoped>
-.list{
-  list-style: none;
-  text-align: center;
-}
 .rireki{
   text-align: center;
+  margin-top: 30px;
+}
+.list{
+  list-style: none;
 }
 </style>

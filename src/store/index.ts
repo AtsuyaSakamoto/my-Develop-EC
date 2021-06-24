@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     items:[],
     login_user:null,
-    cart:"" ,
+    cart:null ,
     orderId:"",
     rireki:[]
   },
@@ -28,7 +28,6 @@ export default new Vuex.Store({
       state.orderId=item.orderId
     },
     addCart(state,{data}){
-      // const index=state.cart.findIndex((item)=>item.id===id)
       state.cart=data
       state.orderId=data.orderId
     },
@@ -36,21 +35,14 @@ export default new Vuex.Store({
      state.cart=cart
      state.orderId=orderId
     },
-    deleteCart(state,{id}){
-      //  const cartitem=state.cart
-      // const sakujo=cartitem.findIndex(item=>item.orderInfo===id)
-      // cartitem.splice(index,1)
-      // console.log("sss")
-      // console.log(state.cart[0])
-      // console.log(id)
-      state.cart=""
+    deleteCart(state,copy){
+      state.cart=copy
     },
-    buyItem(state,{rireki}){
-      state.rireki.push(state.cart)
-      console.log(state.cart)
-      state.cart=""
-      // console.log(state.cart)
-      // console.log(state.rireki)
+    buyItem(state){
+      state.cart=null
+    },
+    getRireki(state,rireki){
+      state.rireki=rireki
     }
       
     
@@ -129,30 +121,55 @@ export default new Vuex.Store({
               })
           }
         },
-        deleteCart({ getters, commit },{id}) {
+        deleteCart({ getters, commit },copy) {
+          console.log("あく")
           if (getters.uid) {
+            // console.log(copy)
              firebase
               .firestore()
               .collection(`users/${getters.uid}/orders`)
-              .doc(id)
-              .delete()
+              .doc(getters.orderId)
+              .update(copy)
               .then(() => {
-                commit("deleteCart",{id});
-                console.log(this.state.cart)
-                console.log(id)
-              
+                commit("deleteCart",copy);
+                console.log(copy)
               });
           }
         },
-      buyItem(rireki){
-        this.commit("buyItem",{rireki})
-      }
-        },
-      
+      buyItem({ getters, commit }, bought){
+        firebase
+        .firestore()
+        .collection(`users/${getters.uid}/orders`)
+        .doc(getters.orderId)
+        .update(bought)
+        .then(() => {
+          // console.log(bought)
+          commit("buyItem");
+          console.log()
+      });
+    },
+    getRireki({ getters, commit }){
+      const rireki=[]
+      firebase
+      .firestore()
+      .collection(`users/${getters.uid}/orders`)
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc=>{
+          // console.log(doc.data())
+          if(doc.data().status===0){
+             rireki.push(doc.data())
+          }
+        })
+        commit("getRireki",rireki);
+        console.log(rireki)
+    });
+  },
+  },
     getters: {
     uid: (state) => (state.login_user ? state.login_user.uid : null),
     orderId:(state)=>(state.orderId ? state.orderId: ""),
-    cartItem:(state)=>(state.cart ? state.cart: ""),
+    cartItem:(state)=>(state.cart ? state.cart.itemInfo: ""),
     userName: (state) => (state.login_user ? state.login_user.displayName : ""),
   }
 })

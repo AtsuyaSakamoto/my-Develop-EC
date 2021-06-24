@@ -69,12 +69,11 @@
 </v-container>
 <br>
   <h3>お支払い方法</h3>
-  <p><input type="radio" name="pay" value=1 v-model="value">代金引換
+  <p><input type="radio" name="pay" value=1 v-model="value" >代金引換
   <input type="radio" name="pay" value=2 v-model="value">クレジットカード</p>
   <!-- <button @click="kakunin">注文</button> -->
-  <v-btn color="primary" @click="buyItem() ; $router.push({name:'Finish'},()=>{}) ">注文</v-btn>
+  <v-btn color="primary" @click="buyItem()">注文</v-btn>
  
-  
 </div>
   
 </template>
@@ -82,6 +81,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import {Component} from 'vue-property-decorator';
+
 
 @Component
 export default class Order extends Vue{
@@ -108,17 +108,35 @@ zipRules= [
           "郵便番号はXXX-XXXXの形式で入力してください",
       ]
 addressRules= [v => !!v || "住所を入力してください"]
-dateRules=[v => !!v || '配達日を入力してください',]
+dateRules=[v=> !!v || '配達日を入力してください',]
+// payRules=[(v) => !!v || "お支払い方法を選択してください"]
 
 buyItem():void{
-  if(confirm("購入しますか?")){
+  // eslint-disable-next-line
+  if((this.$refs as any).form.validate()){
 
+    const bought=
+  {
+    status:Number(this.value),
+    orderId:this.$store.getters.orderId,
+    itemInfo:this.$store.getters.cartItem,
+    userInfo: [{
+      name:this.userName,
+    mail:this.userMail,
+    destinationZipcode:this.userDestinationZipcode,
+    address:this.userAddress,
+    date:this.userDate
+    }]
+}
+  if(confirm("購入しますか?")){
     console.log("発火してる")
-  const rireki=this.$store.state.cart
-  // cart.status=this.value
-  // rireki.push(cart)
- this.$store.dispatch("buyItem",{ rireki:rireki})
+ this.$store.dispatch("buyItem",bought)
+ this.$router.push({name:'Finish'})
+ console.log(this.emailRules)
   }
+    }else{
+      console.log("失敗")
+    }
 }
 }
 </script>

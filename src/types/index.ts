@@ -13,7 +13,7 @@ export interface CartItems{
         itemId: number|string
         buyNum: number
         itemPrice:number
-      
+  
       }]
 }
 
